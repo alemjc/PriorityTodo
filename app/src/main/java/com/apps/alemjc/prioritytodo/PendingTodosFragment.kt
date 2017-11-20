@@ -1,6 +1,5 @@
 package com.apps.alemjc.prioritytodo
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -41,7 +40,7 @@ class PendingTodosFragment : Fragment() {
             val context = view.getContext()
             val recyclerView = view as RecyclerView
             recyclerView.setLayoutManager(LinearLayoutManager(context))
-            recyclerView.adapter = MyItemRecyclerViewAdapter(todos, mListener)
+            recyclerView.adapter = MyItemRecyclerViewAdapter(getContext(), todos, mListener as OnListInteractionListener)
         }
         return view
     }
@@ -62,10 +61,9 @@ class PendingTodosFragment : Fragment() {
      * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
      */
     interface OnListInteractionListener {
-        // Todo: Update argument type and name
         fun addTodo(item: Todo)
-        fun removeTodo(id: Int)
-        fun increasePriority(id: Int, priority: Int)
+        fun removeTodo(id: Long)
+        fun increasePriority(id: Long, priority: Int)
         fun getTodo(): ArrayList<Todo>
 
     }
@@ -75,11 +73,11 @@ class PendingTodosFragment : Fragment() {
             TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         }
 
-        override fun removeTodo(id: Int) {
+        override fun removeTodo(id: Long) {
             TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         }
 
-        override fun increasePriority(id: Int, priority: Int) {
+        override fun increasePriority(id: Long, priority: Int) {
             TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         }
 
@@ -90,12 +88,10 @@ class PendingTodosFragment : Fragment() {
 
     companion object {
 
-        // Todo: Customize parameter argument names
-        private val ARG_FRAGMENT_TYPE = "fragement-type"
-        val PENDING_FRAGMENT_TYPE = 1
-        val DONE_FRAGMENT_TYPE = 2
+        private val ARG_FRAGMENT_TYPE = "fragement-type" // Fragment type
+        val PENDING_FRAGMENT_TYPE = 1 // This type will retrieve tasks that are pending
+        val DONE_FRAGMENT_TYPE = 2  // this type will retrieve tasks that are done
 
-        // Todo: Customize parameter initialization
         fun newInstance(fragmentType: Int): PendingTodosFragment {
             val fragment = PendingTodosFragment()
             val args = Bundle()
