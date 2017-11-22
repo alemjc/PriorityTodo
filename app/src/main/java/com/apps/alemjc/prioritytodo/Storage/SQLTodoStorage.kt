@@ -49,9 +49,9 @@ class SQLTodoStorage(ctx: Context) : TodoStorage{
             query(true, TodoTable.Name, columns, "*", null, null, null, null, null)
         }
 
+        result.use {
 
-        try{
-            while (!result.isAfterLast){
+            while(!it.isAfterLast){
                 val id = result.getLong(result.getColumnIndex(TodoTable.ID))
                 val description = result.getString(result.getColumnIndex(TodoTable.DESCRIPTION))
                 val priority = result.getInt(result.getColumnIndex(TodoTable.PRIORITY))
@@ -61,9 +61,7 @@ class SQLTodoStorage(ctx: Context) : TodoStorage{
                 todos.add(aTodo)
             }
         }
-        finally {
-            result.close()
-        }
+
 
         return todos
     }
