@@ -16,16 +16,18 @@ class SQLTodoStorage(ctx: Context) : TodoStorage{
     override fun create(description: String, priority: Int): Boolean {
         val _id = db.use {
 
-            insert(TodoTable.Name, TodoTable.DESCRIPTION to description, TodoTable.PRIORITY to priority)
+            insert(TodoTable.NAME, TodoTable.DESCRIPTION to description, TodoTable.PRIORITY to priority,
+                    TodoTable.STATUS to TodoTableValues.PENDING_STATUS)
 
         }
 
         return _id >= 0
     }
 
-    override fun update(_id: Long, description: String, priority: Int): Boolean {
+    override fun update(_id: Long, description: String, priority: Int, status:String): Boolean {
         val result = db.use {
-            update(TodoTable.Name, TodoTable.DESCRIPTION to description, TodoTable.PRIORITY to priority)
+            update(TodoTable.NAME, TodoTable.DESCRIPTION to description, TodoTable.PRIORITY to priority,
+                    TodoTable.STATUS to status)
                     .whereArgs("_id = {id}", "id" to _id)
                     .exec()
         }
@@ -35,7 +37,7 @@ class SQLTodoStorage(ctx: Context) : TodoStorage{
 
     override fun remove(_id: Long): Boolean {
         val result:Int =  db.use {
-            delete(TodoTable.Name, "_id = {id}", "id" to _id)
+            delete(TodoTable.NAME, "_id = {id}", "id" to _id)
         }
 
         return result >=0
@@ -46,7 +48,7 @@ class SQLTodoStorage(ctx: Context) : TodoStorage{
         val columns: Array<String> = arrayOf(TodoTable.ID, TodoTable.DESCRIPTION, TodoTable.PRIORITY)
         val todos:ArrayList<Todo> = ArrayList()
         val result:Cursor = db.use {
-            query(true, TodoTable.Name, columns, "*", null, null, null, null, null)
+            query(true, TodoTable.NAME, columns, "*", null, null, null, null, null)
         }
 
         result.use {
@@ -55,8 +57,8 @@ class SQLTodoStorage(ctx: Context) : TodoStorage{
                 val id = result.getLong(result.getColumnIndex(TodoTable.ID))
                 val description = result.getString(result.getColumnIndex(TodoTable.DESCRIPTION))
                 val priority = result.getInt(result.getColumnIndex(TodoTable.PRIORITY))
-
-                val aTodo = Todo(id, description, priority)
+                val status = result.getString(result.getColumnIndex(TodoTable.STATUS))
+                val aTodo = Todo(id, description, priority, status)
 
                 todos.add(aTodo)
             }
