@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
 
-import com.apps.alemjc.prioritytodo.PendingTodosFragment.OnListInteractionListener
+import com.apps.alemjc.prioritytodo.TodosFragment.OnListInteractionListener
 import com.apps.alemjc.prioritytodo.content.Todo
 
 /**
@@ -33,6 +33,7 @@ import com.apps.alemjc.prioritytodo.content.Todo
  override fun onBindViewHolder(holder:ViewHolder, position:Int) {
   val todoItem:Todo = mValues[position]
   val actions = holder.actions
+  val description = holder.description.toString()
 
   actions.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
    override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -46,7 +47,7 @@ import com.apps.alemjc.prioritytodo.content.Todo
      mListener.removeTodo(todoItem._id)
     }
     else{
-     mListener.increasePriority(todoItem._id, Integer.parseInt(selectedItem.toString()))
+     mListener.update(todoItem._id, description, Integer.parseInt(selectedItem.toString()), todoItem.status)
     }
    }
   }

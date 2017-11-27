@@ -15,7 +15,7 @@ class SQLStorage(ctx: Context): ManagedSQLiteOpenHelper(ctx, SQLStorage.DB_NAME,
     }
 
     override fun onCreate(p0: SQLiteDatabase?) {
-        p0!!.createTable(TodoTable.Name, true,
+        p0!!.createTable(TodoTable.NAME, true,
                 TodoTable.ID to INTEGER + PRIMARY_KEY,
                 TodoTable.DESCRIPTION to TEXT,
                 TodoTable.PRIORITY to INTEGER)
@@ -24,7 +24,7 @@ class SQLStorage(ctx: Context): ManagedSQLiteOpenHelper(ctx, SQLStorage.DB_NAME,
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
-        p0!!.dropTable(TodoTable.Name, true)
+        p0!!.dropTable(TodoTable.NAME, true)
         onCreate(p0)
     }
 }

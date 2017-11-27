@@ -7,4 +7,8 @@
         <item>Priority 4</item>
         <item>Delete</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="ItemCreateDialogTaskDescriptionHint">Description</string>
+    <string name="ItemCreateDialogTaskPriorityHint">Priority</string>
 </resources>
