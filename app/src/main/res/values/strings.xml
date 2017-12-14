@@ -1,11 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">PriorityTodo</string>
+    <string name="app_name">Priorities</string>
     <string-array name="user_choices">
-        <item>Priority 1</item>
-        <item>Priority 2</item>
-        <item>Priority 3</item>
-        <item>Priority 4</item>
-        <item>Delete</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->

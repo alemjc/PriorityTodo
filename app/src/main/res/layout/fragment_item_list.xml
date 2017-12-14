@@ -1,31 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.apps.alemjc.prioritytodo.TodosFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="add"
-            android:id="@+id/add"/>
-    </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/list"
         android:name="com.apps.alemjc.prioritytodo.PendingTodosFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        app:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/fragment_item" />
-</LinearLayout>
+        android:layout_height="fill_parent"
+        tools:listitem="@layout/fragment_item"
+    />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabSize="normal"
+        app:layout_behavior="com.apps.alemjc.prioritytodo.ScrollingAwareFABBehavior"
+        android:layout_gravity="bottom|end"
+        android:elevation="4dp"
+        android:layout_margin="4dp"
+        android:src="@drawable/ic_add_white_24px"
+        android:background="@color/colorAccent"
+        android:id="@+id/add"
+        />
+
+
+</android.support.design.widget.CoordinatorLayout>
 

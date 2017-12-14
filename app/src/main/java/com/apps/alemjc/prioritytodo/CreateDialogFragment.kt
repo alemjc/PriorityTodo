@@ -2,19 +2,17 @@ package com.apps.alemjc.prioritytodo
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.app.DialogFragment
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
 import com.apps.alemjc.prioritytodo.content.Todo
-
 
 
 /**
@@ -25,59 +23,53 @@ import com.apps.alemjc.prioritytodo.content.Todo
  * Use the [CreateDialogFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
- class CreateDialogFragment:DialogFragment() {
 
-    private var mView:View? = null
+class CreateDialogFragment : DialogFragment() {
 
-    private var mListener:OnDialogInteractionListener? = null
-
-    override fun onCreateView(inflater:LayoutInflater?, container:ViewGroup?,
-    savedInstanceState:Bundle?):View? {
-        // Inflate the layout for this fragment
-        mView = inflater!!.inflate(R.layout.fragment_create_dialog, container, false)
-        val prioritySpinner: Spinner = mView!!.findViewById(R.id.priority)
-        val arrayAdapter: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(context, R.array.user_choices, R.layout.support_simple_spinner_dropdown_item)
-        arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item)
-
-        prioritySpinner.adapter = arrayAdapter
-        return mView
-    }
+    private var mListener: OnDialogInteractionListener? = null
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder:AlertDialog.Builder = AlertDialog.Builder(context)
-        val layoutInflater:LayoutInflater = activity.layoutInflater
-        val viewLayout:View = layoutInflater.inflate(R.layout.fragment_create_dialog, null)
+        val builder: AlertDialog.Builder = AlertDialog.Builder(parentFragment.context)
+        val layoutInflater: LayoutInflater = activity.layoutInflater
+        val viewLayout: View = layoutInflater.inflate(R.layout.fragment_create_dialog, null)
+
+        val prioritySpinner: Spinner = viewLayout.findViewById<Spinner>(R.id.prioritySpinner)
+        val arrayAdapter: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(context, R.array.user_choices, android.R.layout.simple_spinner_item)
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        prioritySpinner.adapter = arrayAdapter
         builder.setView(viewLayout)
 
-        val onCreateCB: (DialogInterface, Int)->Unit = fun (_, _){
-            val description:String = view!!.findViewById<TextView>(R.id.description).toString()
-            val priorityString:String = view!!.findViewById<Spinner>(R.id.priority).selectedItem as String
-            val priority:Int = Integer.parseInt(priorityString)
+        val onCreateCB: (DialogInterface, Int) -> Unit = fun(_, _) {
+            val description: String = viewLayout.findViewById<TextView>(R.id.description).text.toString()
+            val priorityString: String = viewLayout.findViewById<Spinner>(R.id.prioritySpinner).selectedItem as String
+            val priority: Long = priorityString.toLong()
             val item = Todo(-1, description, priority)
 
             mListener!!.onItemCreated(item)
 
         }
 
+        builder.setTitle("Make todo")
 
         builder.setPositiveButton("Create", onCreateCB)
 
-        builder.setNegativeButton("Cancel"){
-            _, _ -> mListener!!.onCancel()
+        builder.setNegativeButton("Cancel") { _, _ ->
+            mListener!!.onCancel()
         }
 
         return builder.create()
 
     }
 
-    override fun onAttach(context:Context?) {
+    override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context is OnDialogInteractionListener) {
-            mListener = context
-        }
-        else {
-            throw RuntimeException((context!!.toString() + " must implement OnDialogInteractionListener"))
+        val pFragment = parentFragment
+        if (pFragment is OnDialogInteractionListener) {
+            mListener = pFragment
+        } else {
+            throw RuntimeException("Parent Fragment must implement OnDialogInteractionListener")
         }
     }
 
@@ -96,8 +88,9 @@ import com.apps.alemjc.prioritytodo.content.Todo
      * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
      */
     interface OnDialogInteractionListener {
-     // TODO: Update argument type and name
-        fun onItemCreated(item:Todo)
+        // TODO: Update argument type and name
+        fun onItemCreated(item: Todo)
+
         fun onCancel()
     }
 
