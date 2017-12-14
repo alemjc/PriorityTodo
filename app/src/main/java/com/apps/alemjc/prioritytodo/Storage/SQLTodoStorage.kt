@@ -2,21 +2,31 @@ package com.apps.alemjc.prioritytodo.Storage
 
 import android.content.Context
 import android.database.Cursor
+import android.util.Log
+import com.apps.alemjc.prioritytodo.Utils.SingletonHolder
 import com.apps.alemjc.prioritytodo.content.Todo
 import org.jetbrains.anko.db.*
 
 
 /**
- * Created by alemjc on 11/19/17.
+ * Created by Jean Carlos Herniquez on 11/19/17.
  */
-class SQLTodoStorage(ctx: Context) : TodoStorage{
+class SQLTodoStorage private constructor(ctx: Context) : TodoStorage {
+    private var db: SQLStorage? = null
 
-    private val db = SQLStorage(ctx)
+    init {
+        db = SQLStorage(ctx)
 
-    override fun create(description: String, priority: Int): Boolean {
-        val _id = db.use {
+    }
 
-            insert(TodoTable.NAME, TodoTable.DESCRIPTION to description, TodoTable.PRIORITY to priority,
+
+    companion object : SingletonHolder<SQLTodoStorage, Context>(::SQLTodoStorage)
+
+
+    override fun create(description: String, priority: Long): Boolean {
+        var _id: Long = -1
+        db!!.use {
+            _id = insert(TodoTable.NAME, TodoTable.DESCRIPTION to description, TodoTable.PRIORITY to priority,
                     TodoTable.STATUS to TodoTableValues.PENDING_STATUS)
 
         }
@@ -24,44 +34,102 @@ class SQLTodoStorage(ctx: Context) : TodoStorage{
         return _id >= 0
     }
 
-    override fun update(_id: Long, description: String, priority: Int, status:String): Boolean {
-        val result = db.use {
-            update(TodoTable.NAME, TodoTable.DESCRIPTION to description, TodoTable.PRIORITY to priority,
+    override fun update(_id: Long, description: String, priority: Long, status: String): Boolean {
+        var result = -1
+        db!!.use {
+            result = update(TodoTable.NAME, TodoTable.DESCRIPTION to description, TodoTable.PRIORITY to priority,
                     TodoTable.STATUS to status)
-                    .whereArgs("_id = {id}", "id" to _id)
+                    .whereArgs("id = {id}", "id" to _id)
                     .exec()
         }
 
-        return result >= 0
+        return result > 0
     }
 
     override fun remove(_id: Long): Boolean {
-        val result:Int =  db.use {
-            delete(TodoTable.NAME, "_id = {id}", "id" to _id)
+        var result = -1
+        db!!.use {
+            result = delete(TodoTable.NAME, "id = {id}", "id" to _id)
         }
 
-        return result >=0
+        return result > 0
     }
 
     override fun getTodos(): ArrayList<Todo> {
 
         val columns: Array<String> = arrayOf(TodoTable.ID, TodoTable.DESCRIPTION, TodoTable.PRIORITY)
-        val todos:ArrayList<Todo> = ArrayList()
-        val result:Cursor = db.use {
-            query(true, TodoTable.NAME, columns, "*", null, null, null, null, null)
-        }
-
-        result.use {
-
-            while(!it.isAfterLast){
-                val id = result.getLong(result.getColumnIndex(TodoTable.ID))
-                val description = result.getString(result.getColumnIndex(TodoTable.DESCRIPTION))
-                val priority = result.getInt(result.getColumnIndex(TodoTable.PRIORITY))
-                val status = result.getString(result.getColumnIndex(TodoTable.STATUS))
+        val todos: ArrayList<Todo> = ArrayList()
+        db!!.use {
+            val result: Cursor = query(true, TodoTable.NAME, columns, "*", null, null, null, null, null)
+            val sequence: Sequence<Map<String, Any?>> = result.asMapSequence()
+            sequence.forEach {
+                val id = it[TodoTable.ID] as Long
+                val description = it[TodoTable.DESCRIPTION] as String
+                val priority = it[TodoTable.PRIORITY] as Long
+                val status = it[TodoTable.STATUS] as String
                 val aTodo = Todo(id, description, priority, status)
 
                 todos.add(aTodo)
             }
+
+            result.close()
+        }
+
+
+        return todos
+    }
+
+    fun getPendingTasks(): ArrayList<Todo> {
+
+        val todos: ArrayList<Todo> = ArrayList()
+        val selectionArgs: Array<String> = Array(1) {
+            TodoTableValues.PENDING_STATUS
+        }
+
+        db!!.use {
+
+            val result: Cursor = query(true, TodoTable.NAME, null, "status = ?", selectionArgs, null, null, "-" + TodoTable.PRIORITY, null)
+
+            val sequence: Sequence<Map<String, Any?>> = result.asMapSequence()
+
+            sequence.forEach {
+                val id = it[TodoTable.ID] as Long
+                val description = it[TodoTable.DESCRIPTION] as String
+                val priority = it[TodoTable.PRIORITY] as Long
+                val status = it[TodoTable.STATUS] as String
+                val aTodo = Todo(id, description, priority, status)
+
+                todos.add(aTodo)
+            }
+
+            result.close()
+        }
+
+
+        return todos
+    }
+
+    fun getDoneTasks(): ArrayList<Todo> {
+        val todos: ArrayList<Todo> = ArrayList()
+        val selectionArgs: Array<String> = Array(1) {
+            TodoTableValues.DONE_STATUS
+        }
+
+        db!!.use {
+            val result: Cursor = query(true, TodoTable.NAME, null, "status = ?", selectionArgs, null, null, null, null)
+            val sequence: Sequence<Map<String, Any?>> = result.asMapSequence()
+
+            sequence.forEach {
+                val id = it[TodoTable.ID] as Long
+                val description = it[TodoTable.DESCRIPTION] as String
+                val priority = it[TodoTable.PRIORITY] as Long
+                val status = it[TodoTable.STATUS] as String
+                val aTodo = Todo(id, description, priority, status)
+
+                todos.add(aTodo)
+            }
+
+            result.close()
         }
 
 

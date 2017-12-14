@@ -1,0 +1,30 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:layout_margin="20dp"
+    android:padding="10dp"
+    tools:context="com.apps.alemjc.prioritytodo.CreateDialogFragment">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/description"
+        android:ems="12"
+        android:maxLength="24"
+        android:maxLines="1"
+        android:inputType="text"
+        android:ellipsize="end"
+        android:hint="@string/ItemCreateDialogTaskDescriptionHint"/>
+
+    <Spinner
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dropdown"
+        android:layout_gravity="center|end"
+        android:id="@+id/prioritySpinner"
+        />
+
+
+</LinearLayout>
