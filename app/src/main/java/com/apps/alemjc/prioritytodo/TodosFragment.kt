@@ -23,11 +23,11 @@ import com.apps.alemjc.prioritytodo.content.Todo
 
 /**
  * A fragment representing a list of Items.
+ * This list of items could be pending to do tasks or done tasks.
+ * This item also calls its main activity in order to update order instances of itself
+ * that would contain order lists of tasks, for example if this fragment displays pending tasks
+ * then it would call the activity to updating other fragments containing done tasks.
  *
- */
-/**
- * Mandatory empty constructor for the fragment manager to instantiate the
- * fragment (e.g. upon screen orientation changes).
  */
 class TodosFragment : Fragment(), CreateDialogFragment.OnDialogInteractionListener, OnListActionListener {
     private var fragmentType = PENDING_FRAGMENT_TYPE

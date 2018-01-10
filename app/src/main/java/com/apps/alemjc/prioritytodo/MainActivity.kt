@@ -13,6 +13,12 @@ import com.apps.alemjc.prioritytodo.Interfaces.OnListIteractionListener
 import org.jetbrains.anko.find;
 import kotlinx.android.synthetic.main.activity_main.*
 
+
+/**
+ * The Main Activity is used as a middle man in order to communicate in between fragments
+ * and updating each fragments when necessary. Fragments could also request the update of order
+ * fragments by calling the update methods of this application.
+ */
 class MainActivity : AppCompatActivity(), OnListIteractionListener {
 
     internal companion object {

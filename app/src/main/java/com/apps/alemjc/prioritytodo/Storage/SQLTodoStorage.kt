@@ -22,7 +22,6 @@ class SQLTodoStorage private constructor(ctx: Context) : TodoStorage {
 
     companion object : SingletonHolder<SQLTodoStorage, Context>(::SQLTodoStorage)
 
-
     override fun create(description: String, priority: Long): Boolean {
         var _id: Long = -1
         db!!.use {

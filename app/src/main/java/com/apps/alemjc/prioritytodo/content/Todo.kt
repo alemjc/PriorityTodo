@@ -4,6 +4,7 @@ import com.apps.alemjc.prioritytodo.Storage.TodoTableValues
 
 /**
  * Created by Jean Carlos Henriquez on 11/19/17.
+ * Holds task information in memory in order to display to the user.
  */
 class Todo(map: MutableMap<String, Any?>) {
 

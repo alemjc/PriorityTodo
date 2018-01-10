@@ -16,7 +16,7 @@ import com.apps.alemjc.prioritytodo.content.Todo
 
 
 /**
- * A simple [Fragment] subclass.
+ * Dialog that would be used to prompt the user to create a new task
  * Activities that contain this fragment must implement the
  * [CreateDialogFragment.OnDialogInteractionListener] interface
  * to handle interaction events.
@@ -34,6 +34,7 @@ class CreateDialogFragment : DialogFragment() {
         val layoutInflater: LayoutInflater = activity.layoutInflater
         val viewLayout: View = layoutInflater.inflate(R.layout.fragment_create_dialog, null)
 
+        // Creating spinner that would show a selectable number of priorities
         val prioritySpinner: Spinner = viewLayout.findViewById<Spinner>(R.id.prioritySpinner)
         val arrayAdapter: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(context, R.array.user_choices, android.R.layout.simple_spinner_item)
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -41,6 +42,9 @@ class CreateDialogFragment : DialogFragment() {
         prioritySpinner.adapter = arrayAdapter
         builder.setView(viewLayout)
 
+        // This is a callback for when the user clicks on create
+        // In here we create a task object that then would be send to the
+        // listener onItem created method, This listener would be the enclosing fragment in this instance
         val onCreateCB: (DialogInterface, Int) -> Unit = fun(_, _) {
             val description: String = viewLayout.findViewById<TextView>(R.id.description).text.toString()
             val priorityString: String = viewLayout.findViewById<Spinner>(R.id.prioritySpinner).selectedItem as String

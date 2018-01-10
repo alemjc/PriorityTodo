@@ -10,12 +10,19 @@ import org.jetbrains.anko.db.*
  */
 class SQLStorage(ctx: Context) : ManagedSQLiteOpenHelper(ctx, SQLStorage.DB_NAME, null, SQLStorage.VERSION) {
 
+    /**
+     * companion object responsible for holding database name and version number
+     */
     companion object {
         val DB_NAME = "todo.db"
         val VERSION = 13
     }
 
 
+    /**
+     * Will create database
+     * @param p0: SQLite database object that would create database
+     */
     override fun onCreate(p0: SQLiteDatabase?) {
 
 
@@ -28,6 +35,10 @@ class SQLStorage(ctx: Context) : ManagedSQLiteOpenHelper(ctx, SQLStorage.DB_NAME
 
     }
 
+    /**
+     * Will run when data base would need upgrade, in most cases this is when version number is changed
+     *
+     */
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
         p0!!.dropTable(TodoTable.NAME, true)
         onCreate(p0)
